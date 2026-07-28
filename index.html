@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiji Campus Bus & Weather Dashboard</title>
+    <style>
+        /* CSS styling for the dashboard layout and aesthetics */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .dashboard {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        h1 {
+            font-size: 20px;
+            color: #007a3d; /* Fiji green tone */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0055a5; /* Fiji blue tone */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #003b75;
+        }
+
+        .result {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #007a3d;
+        }
+
+        .weather-box {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <h1>Fiji Campus Bus & Weather</h1>
+
+        <!-- Bus Fare Calculator Section -->
+        <div class="section">
+            <label for="budget">Enter Budget (FJD):</label>
+            <input type="number" id="budget" placeholder="e.g., 10.00" step="0.50" min="0">
+            <button onclick="calculateRides()">Calculate Rides</button>
+            <div id="resultOutput" class="result"></div>
+        </div>
+
+        <!-- Nadi Weather Forecast Section -->
+        <div class="section">
+            <label><strong>Nadi Weather Forecast:</strong></label>
+            <div id="weatherOutput" class="weather-box">
+                Loading weather...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript logic for bus ride calculation and weather display
+
+        // Constant fare price per ride in FJD
+        const FARE_PER_RIDE = 1.50;
+
+        /**
+         * Calculates how many bus rides a student can afford based on input budget
+         */
+        function calculateRides() {
+            const budgetInput = document.getElementById('budget').value;
+            const resultOutput = document.getElementById('resultOutput');
+
+            // Parse input string to float
+            const budget = parseFloat(budgetInput);
+
+            // Validation check for empty or negative numbers
+            if (isNaN(budget) || budget < 0) {
+                resultOutput.style.color = 'red';
+                resultOutput.innerText = 'Please enter a valid budget amount.';
+                return;
+            }
+
+            // Calculate total possible rides using Math.floor to get whole rides
+            const totalRides = Math.floor(budget / FARE_PER_RIDE);
+            const remainingMoney = (budget % FARE_PER_RIDE).toFixed(2);
+
+            // Display output
+            resultOutput.style.color = '#007a3d';
+            resultOutput.innerText = `You can afford ${totalRides} ride(s). Change left: $${remainingMoney} FJD`;
+        }
+
+        /**
+         * Simulates fetching today's weather forecast for Nadi
+         */
+        function loadNadiWeather() {
+            const weatherOutput = document.getElementById('weatherOutput');
+
+            // Weather data payload for Nadi
+            const nadiWeather = {
+                temperature: '24°C',
+                condition: 'Partly sunny',
+                humidity: '57%',
+                wind: '11 mph southeast'
+            };
+
+            // Inject weather information into the designated box
+            weatherOutput.innerHTML = `
+                Temperature: ${nadiWeather.temperature}<br>
+                Condition: ${nadiWeather.condition}<br>
+                Humidity: ${nadiWeather.humidity}<br>
+                Wind: ${nadiWeather.wind}
+            `;
+        }
+
+        // Run weather function automatically once the window loads
+        window.onload = function() {
+            loadNadiWeather();
+        };
+    </script>
+</body>
+</html>
